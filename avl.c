@@ -9,7 +9,7 @@ struct AVLTree * newAVLTree()
 {
 	struct AVLTree *tree = (struct AVLTree *)malloc(sizeof(struct AVLTree));
 	assert(tree != 0);
-	
+
 	initAVLTree(tree);
 	return tree;
 }
@@ -26,7 +26,7 @@ void _freeAVL(struct AVLnode *node)
 {
 	if (node != 0) {
 		_freeAVL(node->left);
-		_freeAVL(node->right);		
+		_freeAVL(node->right);
 		free(node);
 	}
 }
@@ -79,6 +79,10 @@ struct AVLnode * rotateLeft(struct AVLnode * current)
 
 
     /* FIX ME */
+	current->right= newtop->left;
+	newtop->left=current;
+	setHeight(current);
+	setHeight(newtop);
 
 
 
@@ -92,6 +96,10 @@ struct AVLnode * rotateRight(struct AVLnode * current)
 
 
         /* FIX ME */
+	current->left= newtop->right;
+	newtop->right=current;
+	setHeight(current);
+	setHeight(newtop);
 
 	return newtop;
 }
@@ -104,6 +112,15 @@ struct AVLnode * _balance(struct AVLnode * current)
 
 
        /* FIX ME */
+	int rotation = h(current->right) - h(current->left);
+	if (rotation < -1){
+		rotateRight(current);
+		rotateRight(current);
+	}
+	else if(rotation > 1){
+		rotateLeft(current);
+		rotateLeft(current);
+	}
 
 
 	setHeight(current);
@@ -124,7 +141,7 @@ struct AVLnode * AVLnodeAdd(struct	AVLnode * current, TYPE newValue)
 /* add val to AVL tree */
 void addAVLTree(struct AVLTree *tree, TYPE val)
 {
-	tree->root = AVLnodeAdd(tree->root, val);	
+	tree->root = AVLnodeAdd(tree->root, val);
 	tree->cnt++;
 }
 
@@ -134,7 +151,7 @@ int containsAVLTree(struct AVLTree *tree, TYPE val)
 	struct AVLnode* cur = tree->root;
 
 	while(cur != 0){
-		if (EQ(cur->val, val))	
+		if (EQ(cur->val, val))
 			return 1;
 		else if (LT(val, cur->val))
 			cur = cur->left;
@@ -142,7 +159,7 @@ int containsAVLTree(struct AVLTree *tree, TYPE val)
 			cur = cur->right;
 	}
 
-	return 0; 
+	return 0;
 }
 
 /* find leftmost value from subtree of current node */
@@ -221,14 +238,12 @@ struct AVLnode * _removeAllNodes(struct AVLTree * tree, struct AVLnode * cur, TY
          cur = temp;
       }
    }
-   if (cur){  
+   if (cur){
       if (LT(val, cur->val))
          cur->left = _removeAllNodes(tree,cur->left, val);
-      else 
+      else
          cur->right = _removeAllNodes(tree,cur->right, val);
    }
    return _balance(cur);
-  
+
 }
-
-
