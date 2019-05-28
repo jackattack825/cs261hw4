@@ -126,7 +126,7 @@ void printBreadthFirstTree(struct AVLTree *tree){
 
 }
 
-void printGivenLevel(AVLnode* root, int level)
+void printGivenLevel(struct AVLnode* root, int level)
 {
     if (root == NULL)
         return;
