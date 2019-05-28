@@ -117,13 +117,13 @@ struct AVLnode * _balance(struct AVLnode * current)
 		drotation = h(current->left->right) - h(current->left->left);
 		if(drotation > 0)
 			current->left = rotateLeft(current->left);
-		return rotateRight(current);
+		current= rotateRight(current);
 	}
 	else if(rotation > 1){
 		drotation = h(current->right->right) - h(current->right->left);
 		if(drotation > 0)
 			current->right = rotateRight(current->right);
-		return rotateLeft(current);
+		current= rotateLeft(current);
 	}
 
 
@@ -139,11 +139,13 @@ struct AVLnode * AVLnodeAdd(struct	AVLnode * current, TYPE newValue)
 
      /* FIX ME */
 	if(current ==0){
-		n= malloc(sizeof(struct AVLnode*));
+		n= malloc(sizeof(struct AVLnode));
 		n->val= newValue;
 		n->height=0;		/*do i set height here??*/
 		return n;
 	}
+	if(EQ(current->val, newValue))
+		return current;
 	else{
 		if(LT(newValue, current->val)) /* less than */
 			current->left = AVLnodeAdd(current->left, newValue);
